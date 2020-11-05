@@ -554,4 +554,4 @@ ScriptsOnlyBuild:
   platform: 20
   scenePathNames:
   - "Assets/\u95DC\u53611.unity"
-  playerPath: "C:/Users/tonys/OneDrive/Desktop/Unity\u4F5C\u54C1/Unity_2D_Game2/Web2"
+  playerPath: C:/Users/tonys/OneDrive/Desktop/Unity works/Unity_2D_Game2/Web
