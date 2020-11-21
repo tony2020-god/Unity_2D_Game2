@@ -1,18 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject GameDescriptionImage;
+    public void StartGame()
     {
-        
+        SceneManager.LoadScene("關卡1");
     }
-
-    // Update is called once per frame
-    void Update()
+    public void GameDescription()
     {
-        
+        GameDescriptionImage.SetActive(true);
+    }
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+    public void CloseDescription()
+    {
+        GameDescriptionImage.SetActive(false);
     }
 }
