@@ -123,14 +123,13 @@ public class Player : MonoBehaviour
     }
     private void Dead(string obj)
     {
-        if (obj == "死亡界線")
+        if (obj == "死亡區域" || obj == "敵人子彈")
         {
             enabled = false;
             ani.SetBool("死亡觸發", true);
             //延遲呼叫("方法名稱",延遲時間)
             Invoke("Replay", 2.5f);
         }
-        
     }
     private void Replay()
     {
@@ -142,7 +141,7 @@ public class Player : MonoBehaviour
     /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Dead(collision.gameObject.name);
+        Dead(collision.gameObject.tag);
     }
     private void OnDrawGizmos()
     {
