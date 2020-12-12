@@ -17,19 +17,24 @@ public class Player : MonoBehaviour
     public int bulletspeed = 800;
     public AudioClip music;
     [Header("角色生命"), Range(0, 10)]
-    public int life = 3;
+    public static int life = 3;
     public Rigidbody2D rig;
     public Animator ani;
     public AudioSource aud;
     public AudioClip SoundFire;
     public Vector2 offset;
     public float radius = 0.3f;
-
+    private GameManager gm;
+    public bool indoor;
     public void Awake()
     {
         rig = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
         aud = GetComponent<AudioSource>();
+
+        //透過<類型>取得物件
+        //僅限於此<類型>在場景上只有一個
+        gm = FindObjectOfType<GameManager>();
     }
     public void Start()
     {
@@ -43,6 +48,7 @@ public class Player : MonoBehaviour
         Move();
         Fire();
         Jump();
+        NextLV();
     }
     private void Drive(float speed)
     {
@@ -121,19 +127,24 @@ public class Player : MonoBehaviour
             isGround = false;   //不再地面上了
         }
     }
-    private void Dead(string obj)
+    public void Dead(string obj)
     {
-        if (obj == "死亡區域" || obj == "敵人子彈")
+        if (obj == "死亡界線" || obj == "敵人子彈"||obj == "陷阱")
         {
+            if (ani.GetBool("死亡觸發")) return;
             enabled = false;
             ani.SetBool("死亡觸發", true);
             //延遲呼叫("方法名稱",延遲時間)
-            Invoke("Replay", 2.5f);
+            //靜態成員
+            //類別名稱,靜態成員 存取
+            if (GameManager.live > 1) Invoke("Replay", 2.5f);
+            //呼叫GM 處理死亡
+            gm.PlayerDead();
         }
     }
     private void Replay()
     {
-        SceneManager.LoadScene("關卡1");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     /// <summary>
     /// ODE碰撞時執行一次的事件
@@ -149,5 +160,22 @@ public class Player : MonoBehaviour
         Gizmos.color = new Color(1, 0, 0, 0.5f);
         //圖示 繪製球體(中心點、半徑)
         Gizmos.DrawSphere(new Vector2(transform.position.x, transform.position.y) + offset, radius);
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.name == "傳送門") indoor = true;
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.name == "傳送門") indoor = false;
+    }
+    private void NextLV()
+    {
+        if(indoor && Input.GetKeyDown(KeyCode.W)) //如果 在門裡面 並且按下w
+        {
+            int lvindex = SceneManager.GetActiveScene().buildIndex;  //取得當前的場景編號
+            lvindex++;                                               //編號加一
+            SceneManager.LoadScene(lvindex);                         //載入下一個
+        }
     }
 }

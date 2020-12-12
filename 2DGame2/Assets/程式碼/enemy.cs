@@ -21,6 +21,8 @@ public class enemy : MonoBehaviour
     private AudioSource aud;
     private float timer;
     private Animator ani;
+    private GameManager gm;
+    public int score = 50;
 
     private void Awake()
     {
@@ -29,6 +31,8 @@ public class enemy : MonoBehaviour
         player = GameObject.Find("玩家").transform;
         aud = GetComponent<AudioSource>();
         ani = GetComponent<Animator>();
+
+        gm = FindObjectOfType<GameManager>();
     }
 
     private void Move()
@@ -78,7 +82,8 @@ public class enemy : MonoBehaviour
         ani.SetBool("死亡觸發", true);
         GetComponent<CapsuleCollider2D>().enabled = false;
         rig.Sleep();
-        Destroy(gameObject, 2.5f);
+        //Destroy(gameObject, 2.5f);
+        gm.AddScore(score);
     }
 
     private void OnDrawGizmosSelected()
